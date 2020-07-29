@@ -1,0 +1,32 @@
+@charset "utf-8";
+
+.cztable {
+	margin: 0 2px;
+	padding: 2px 0;
+}
+
+.page {
+	padding: 8px;
+	text-align: center;
+}
+
+.page div {
+	display: inline;
+	margin-right: 5px;
+}
+
+.page a {
+	padding: 2px 6px;
+	border: 1px #4890cf solid;
+	background: #fff;
+	color: #000;
+}
+
+.page a:hover {
+	background: #cee2f3;
+	color: #000;
+}
+
+.search input {
+	width: 40px;
+}

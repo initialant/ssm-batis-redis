@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 日志级别及优先级：off > fatal > error > warn > info > debug > trace > all -->
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<File name="File" fileName="D:\201939\log4j2\fileLog.log" append="false">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</File>
+		<!-- 记录debug级别的日志，并把日志存储到 rollingFile.log文件中
+		               如果 rollingFile.log的大小超过1MB，则自动存储到按照年-月-日建立的文件夹下并进行压缩
+		-->
+		<RollingFile name="RollingFileDebug" fileName="D:/201939/log4j2/rollingFileDebug.log"
+			filePattern="D:/201939/log4j2/logsDebug/$${date:yyyy-MM-dd}/debug-%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+			<SizeBasedTriggeringPolicy size="1 MB"/>
+		</RollingFile>
+		
+		<RollingFile name="RollingFileError" fileName="D:/201939/log4j2/rollingFileError.log"
+			filePattern="D:/201939/log4j2/logsError/$${date:yyyy-MM-dd}/error-%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+			<SizeBasedTriggeringPolicy size="1 MB"/>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="debug">
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration>

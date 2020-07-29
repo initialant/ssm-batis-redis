@@ -1,0 +1,34 @@
+@charset "utf-8";
+
+.cztable {
+	padding: 15px 0;
+}
+
+.cztable table {
+	border-bottom: #cfe1f9 solid 1px;
+	border-right: #cfe1f9 solid 1px;
+}
+
+.cztable td, .cztable th {
+	border-top: #cfe1f9 solid 1px;
+	border-left: #cfe1f9 solid 1px;
+	padding: 6px 5px;
+}
+
+.cztable th {
+	background: #d7e4ec;
+	line-height: 22px;
+	color: #185697;
+}
+
+.cztable tr:hover {
+	background-color: #ffffff
+}
+
+/*.cztable tr:nth-child(odd) {
+	background: #F4F4F4;
+}
+
+.cztable td:nth-child(even) {
+	color: #C00;
+}*/

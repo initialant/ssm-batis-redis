@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="art">
+    <output-path>$PROJECT_DIR$/out/artifacts/art</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="artAndGuessManager" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="spring-jdbc-5.1.9.RELEASE" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="artAndGuessManager/web/Web" />
+      <element id="module-source" name="artAndGuessManager" />
+    </root>
+  </artifact>
+</component>

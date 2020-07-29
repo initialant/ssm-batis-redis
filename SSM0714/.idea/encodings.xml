@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/main/java/com" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/xxx/controller/ShowController.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/xxx/converter/StringToDateConverter.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/xxx/exception/CustomException.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/xxx/mapping/UserMapper.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/log4j2.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mybatis.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/target/classes/com/xxx/mapping" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/pages/body.jsp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/pages/left.jsp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/pages/login.jsp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/pages/main.jsp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/pages/question_list.jsp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/pages/question_update.jsp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/pages/top.jsp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/charts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/css" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/images" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/js" charset="UTF-8" />
+    <file url="PROJECT" charset="GBK" />
+  </component>
+</project>

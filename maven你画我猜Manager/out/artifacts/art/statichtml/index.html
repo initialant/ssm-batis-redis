@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>你画我猜</title>
+		<script type="text/javascript" src="../js/jquery.js"></script>
+		<script type="text/javascript" src="../js/layer.js" ></script>
+		<script type="text/javascript" src="../js/layer2.js"></script>
+		<link rel="stylesheet" href="../css/daydayup.css"/>
+		<link rel="stylesheet" href="../css/loginregister.css"/>
+		<link rel="stylesheet" href="../css/common.css"/>
+	</head>
+	<body>
+		<header>
+			<div id="headerbar">
+				<!--navigation-->
+			</div>
+		</header>
+		<section id="title">
+			<div id="titlebar">
+				<div id="leftquestion">
+					<a href="#" onclick="f7()">我要提问</a>
+				</div>
+				<div id="rightquestion">
+					<input type="text" placeholder="请输入查询关键字"/>
+					<a href="#"><img src="../img/ic_search.svg"/></a>
+				</div>
+			</div>
+		</section>
+		<section id="main">
+			<section id="content">
+				<div id="headlist">
+					<div id="menu">
+						<a href="#" class="menu-item" id="technologyRes">技术问答</a>
+						<a href="#" id="faceTest">面试题</a>
+						<a href="#" id="threshould">即时问答</a>
+					</div>
+					<div id="order">
+						<span>排列:</span>
+						<a href="#" id="newest" onclick="sortByNewTime()">最新提问</a>
+						<a href="#" id="notAnswer" onclick="sortOnlyAnswerZero()">尚未回答</a>
+						<a href="#" id="hotest" onclick="sortByScan()">热门</a>
+					</div>
+				</div>
+			</section>
+
+			<div class="layui-card-footer" style="text-align: center">
+				<div id="pagination"></div>
+			</div>
+
+		</section>
+
+
+
+
+
+		<!--注册div开始-->
+		<div class="loginregister" id="login">
+			<div>
+				<form>
+					<div class="input_box">
+						<input id="inputName" name="userInfo.account" maxlength="15" class="input_cont" type="text" placeholder="用户名/邮箱/手机号"/>
+					</div>
+					<div class="input_password">
+						<input id="inputPassword" type="password" maxlength="15" class="input_cont" placeholder="密码 "/>
+					</div>
+					<div class="input_checkbox">
+						<input type="checkbox" style="display: none" id="remember"/><label class="checkbox" for="remember">记住密码</label>
+					</div>
+					<div class="btn">
+						<input type="button" id="logbtn" class="btn" value="登录" />
+					</div>
+				</form>
+			</div>
+			<div class="msg">Xxxxxxxx</div>
+		</div>
+		<!--注册div结束-->
+		<!--登录div开始-->
+		<div class="loginregister" style="height:280px;" id="register">
+		    <div>
+		    	<form>
+					  <div class="input_box">
+				        <input id="newname" name="name" maxlength="15" class="input_cont" type="text" placeholder="用户名/邮箱/手机号"/>
+				        <span class="mark">*</span>
+				      </div>
+				      <div class="input_password">
+				        <input id="newpassword1" name="password" type="password" maxlength="15" class="input_cont" placeholder="密码"/>
+				        <span class="mark">*</span>
+				      </div>
+				      <div class="input_password">
+				        <input id="newpassword2" type="password" maxlength="15" class="input_cont" placeholder="密码确认"/>
+				        <span class="mark">*</span>
+				      </div>
+				      <div class="btn">
+				    	<input type="button" class="btn" id="registerbtn" value="注册"  />
+				      </div>
+			    </form>
+		    </div>
+			<div class="msg">Xxx</div>
+		</div>
+
+		<div class="loginregister" style="height:280px;" id="updatePassword">
+			<div>
+				<form>
+					<div class="input_password">
+						<input id="oldPassword" name="password" type="password" maxlength="15" class="input_cont" placeholder="密码"/>
+						<span class="mark">*</span>
+					</div>
+					<div class="input_password">
+						<input id="newPassSpec" type="password" maxlength="15" class="input_cont" placeholder="密码确认"/>
+						<span class="mark">*</span>
+					</div>
+					<div class="btn">
+						<input type="button" class="btn" id="updateAct" value="修改密码"  />
+					</div>
+				</form>
+			</div>
+			<div class="msg">Xxx</div>
+		</div>
+		<!--登录div结束-->
+	</body>
+
+	<!--先加载body在运行-->
+	<script>
+		//common
+		var click_flag = 999;
+		var theIdOfUser = "";
+		var timestamp   =new Date().getTime();
+		var typeOfTheModule = 1;  //default 1
+		var initLoadFlag = 1;  //default 1
+		var namespace = "";//GetQueryString("name");
+		var idspace = "";//GetQueryString("id");
+		var num_navigation = 0;
+		var num_pagenow = 1;
+		var sort_space = 1;  //default 1
+		var labelStrArray=new Array(14);
+		labelStrArray[0]="java";
+		labelStrArray[1]="html";
+		labelStrArray[2]="css";
+		labelStrArray[3]="jquery";
+		labelStrArray[4]="ajax";
+		labelStrArray[5]="jsp";
+		labelStrArray[6]="javascript";
+		labelStrArray[7]="servlet";
+		labelStrArray[8]="structs";
+		labelStrArray[9]="spring";
+		labelStrArray[10]="structs";
+		labelStrArray[11]="mybatis";
+		labelStrArray[12]="database";
+		labelStrArray[13]="others";
+
+		function GetQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return unescape(r[2]); return null;
+		}   // when the web is loading , get the information about the user
+		function initUpdate() {
+			//修改密码弹窗
+			$("#updatepass").bind("click",function(){
+				layer.open({
+					type:1,
+					title:'修改密码',
+					area: ['398px', '345px'], //宽高:398,282;
+					resize:false,
+					content:$("#updatePassword"),
+					closeBtn:1,
+				});
+			});
+
+			//update the password
+			$("#updateAct").bind("click",function(){
+				registFlag = 0;
+				layer.closeAll();
+				var registFlag;
+				//new
+				var theOldPass = $('#oldPassword').val();
+				var theNewPassSpec = $('#newPassSpec').val();
+
+				if(theOldPass == null || theOldPass == ''){
+					alert("密码不能为空，请重新进入修改密码功能");
+				} else {
+					if(theNewPassSpec == theOldPass){
+						registFlag = 1;  //申请注册标记
+					} else {
+						alert("密码不一致，请重新进入修改密码功能")
+					}
+
+				}
+
+				if(registFlag == 1){
+					/*click login*/
+					$.ajax({
+						type:'get',
+						url : '/art/user/updateTheUser',
+						data:{
+							"id":theIdOfUser,
+							"password":theNewPassSpec
+						},
+						dataType:'json',
+
+						success : function(data) {
+							console.log("succeed");
+						},
+
+						error:function(){
+							alert("请联系管理员开通网关");
+							var ul= $('#log');
+							var ul1 = $('#headerbar');
+						}
+					})
+				}
+			});
+
+			//add quit
+			$("#quit").bind("click",function(){
+				//change the view
+				initNavigation();
+				//change the idFlag
+				var userEntity = {
+					name: "",
+					id: 0
+				};
+				sessionStorage.setItem('user', JSON.stringify(userEntity));
+				var userJsonStr = sessionStorage.getItem('user');
+				userEntity = JSON.parse(userJsonStr);
+				idspace = userEntity.id;
+				namespace = userEntity.name;
+				initLogin();
+			});
+		}  //init updateKey
+		function initLogin() {
+			$("#loglink").bind("click",function(){
+				layer.open({
+					type:1,
+					title:'登录',
+					//skin: 'layui-layer-rim', //加上边框
+					area: ['398px', '345px'], //宽高:398,222;
+					//content: $('#sublayer'),//content: $('#sublayer').html()会丢失事件
+					resize:false,
+					content:$("#login"),
+					closeBtn:1,
+				});
+			});
+			$("#logbtn").bind("click",function(){
+				layer.closeAll();
+
+				//new
+				var name = $('#inputName').val();
+				if(name == null || name == ''){
+					alert("请输入用户名");
+				} else {
+					var password = $('#inputPassword').val();
+					if(password == null || password == ''){
+						alert("请输入密码");
+					} else {
+						click_flag = 1;
+					}
+				}
+
+				if(click_flag == 1){
+					/*click login*/
+					$.ajax({
+						type:'get',
+						url : '/art/user/loginCheck',
+						data:{
+							"name":$('#inputName').val(),
+							"password":$('#inputPassword').val()
+						},
+						dataType:'json',
+
+						success : function(data) {
+							var ul1 = $('#headerbar');
+							ul1.html("<ul id=\"navigation\">\n" +
+									"<li><a href=\"#\">问答</a></li>\n" +
+									"<li><a href=\"#\">练习</a></li>\n" +
+									"<li><a href=\"#\">考试</a></li>\n" +
+									"</ul>\n" +
+									"<ul id=\"log\">\n" +
+									"<li><a href=\"#\" id=\"special\" value='"+ data.id +"'>欢迎："+ data.name + " </a></li>\n" +
+									"<li><span></span></li>\n" +
+									"<li><a href=\"#\" id=\"updatepass\">修改密码</a></li>\n" +
+									"<li><span></span></li>\n" +
+									"<li><a href=\"#\" id=\"quit\">退出</a></li>\n" +
+									"</ul>");
+							//add updateKey
+							initUpdate();
+							theIdOfUser = data.id;
+							var userEntity = {
+								name: data.name,
+								id: data.id
+							};
+							sessionStorage.setItem('user', JSON.stringify(userEntity));
+							var userJsonStr = sessionStorage.getItem('user');
+							userEntity = JSON.parse(userJsonStr);
+							idspace = userEntity.id;
+							namespace = userEntity.name;
+						},
+
+						error:function(){
+							alert("用户不存在或者密码错误");
+						}
+					})
+				}
+			});
+			$("#registerlink").bind("click",function(){
+				layer.open({
+					type:1,
+					title:'注册',
+					//skin: 'layui-layer-rim', //加上边框
+					area: ['398px', '345px'], //宽高:398,282;
+					//content: $('#sublayer'),//content: $('#sublayer').html()会丢失事件
+					resize:false,
+					content:$("#register"),
+					closeBtn:1,
+				});
+			}); //注册头
+			$("#registerbtn").bind("click",function(){
+				registFlag = 0;
+				layer.closeAll();
+				var registFlag;
+				//new
+				var theNewName = $('#newname').val();
+				var theNewPassword1 = $('#newpassword1').val();
+				var theNewPassword2 = $('#newpassword2').val();
+
+				if(theNewName == null || theNewName == ''){
+					alert("请输入用户名");
+				} else {
+					if(theNewPassword1 == null || theNewPassword1 == ''){
+						alert("请输入密码");
+					} else {
+						if(theNewPassword1 == theNewPassword2){
+							registFlag = 1;  //申请注册标记
+						}
+					}
+				}
+
+				if(registFlag == 1){
+					/*click login*/
+					$.ajax({
+						type:'get',
+						url : '/art/user/regist',
+						data:{
+							"name":theNewName,
+							"password":theNewPassword2
+						},
+						dataType:'json',
+
+						success : function(data) {
+							var ul1 = $('#headerbar');
+							idspace = data.id;
+							namespace = data.name;
+							ul1.html("<ul id=\"navigation\">\n" +
+									"<li><a href=\"#\">问答</a></li>\n" +
+									"<li><a href=\"#\">练习</a></li>\n" +
+									"<li><a href=\"#\">考试</a></li>\n" +
+									"</ul>\n" +
+									"<ul id=\"log\">\n" +
+									"<li><a href=\"#\" id=\"special\" value='"+ data.id +"'>欢迎："+ data.name + " </a></li>\n" +
+									"<li><span></span></li>\n" +
+									"<li><a href=\"#\" id=\"updatePass\">修改密码</a></li>\n" +
+									"<li><span></span></li>\n" +
+									"<li><a href=\"#\" id=\"quit\">退出</a></li>\n" +
+									"</ul>");
+							//add updateKey
+							initUpdate();
+							theIdOfUser = data.id;
+						},
+
+						error:function(){
+							alert("请联系管理员开通网关");
+							var ul= $('#log');
+							var ul1 = $('#headerbar');
+						}
+					})
+				}
+			});//注册(弹出窗的)
+		}   //init login and register
+		function initNavigation() {
+			//change the view
+			var ul1 = $('#headerbar');
+			ul1.html("<ul id=\"navigation\">\t\t\t\n" +
+					"\t\t\t\t\t<li><a href=\"#\">首页</a></li>\n" +
+					"\t\t\t\t\t<li><a href=\"#\">问答</a></li>\n" +
+					"\t\t\t\t</ul>\n" +
+					"\t\t\t\t<ul id=\"log\">\t\t\t\t\n" +
+					"\t\t\t\t\t<li><a href=\"#\" id=\"loglink\">登录</a></li>\n" +
+					"\t\t\t\t\t<li><span></span></li>\n" +
+					"\t\t\t\t\t<li><a href=\"#\" id=\"registerlink\">注册</a></li>\n" +
+					"\t\t\t\t</ul>");
+		} //init the navigation
+		function initQuestionModule() {
+			//add the technology ask and answer
+			$("#technologyRes").bind("click",function(){
+				console.log("技术问答");
+				sort_space = 1;
+				typeOfTheModule = 1;
+                num_pagenow = 1;
+				getSpecificQuestionList("1","0","1");  //init scene type = 1,page = 0,sortKind = 1
+			});
+			//add the facetest
+			$("#faceTest").bind("click",function(){
+				console.log("面试题");
+				sort_space = 1;
+				typeOfTheModule = 2;
+                num_pagenow = 1;
+				getSpecificQuestionList("2","0","1");  //init scene type = 1,page = 0,sortKind = 1
+			});
+			//add the thresshould
+			$("#threshould").bind("click",function(){
+				console.log("瞬时回答");
+				sort_space = 1;
+				typeOfTheModule = 3;
+                num_pagenow = 1;
+				getSpecificQuestionList("3","0","1");  //init scene type = 1,page = 0,sortKind = 1
+			});
+
+		}   //init the three module add the click action
+		function removeQuestionModule(tagName,tagClass) {
+			var tagElements = document.getElementsByTagName( tagName );
+			for( var m = 0 ; m < tagElements.length ; m++ ){
+				if( tagElements[m].className == tagClass ){
+					tagElements[m].parentNode.removeChild( tagElements[m] );
+					m--;
+				}
+			}
+		}  //remove the specific tagName with tagClass
+		function getSpecificQuestionList(Type,Page,SortKind){
+			$.ajax({
+				type: "post",
+				url: '/art/ques/getSpecificQuestion',
+				data:{
+					type:Type
+					,page:Page
+					,limit:"3"
+					,sortKind:SortKind
+				},
+				async:false,
+				dataType: 'json',
+				success: function(data){
+
+					removeQuestionModule("section","box");  //remove the section > box
+
+					var questionlist = $('#content');
+					$.each(data, function(k, v) {
+						console.log("序号："+ k);
+
+						labelStr = "";
+						for (let i = 0; i < 14; ++i) { //循环便利查看用户的选择项
+							if(i < 5){
+								if(v.firstLabel&(1<<i)){
+									labelStr +="<span class=\"tag\">" +labelStrArray[i] + "</span>";
+								}
+							} else if(i < 10) {
+								if(v.secondLabel&(1<<i-5)){
+									labelStr +="<span class=\"tag\">" +labelStrArray[i] + "</span>";
+								}
+							} else {
+								if(v.thirdLabel&(1<<i-10)){
+									labelStr +="<span class=\"tag\">" +labelStrArray[i] + "</span>";
+								}
+							}
+						}
+						questionlist.append(
+								"<section class='box'>" +
+								"<div class='box-f1'>" +
+								"<ul>" +
+								"<li>" + v.voteCnt + "<span>投票</span></li>" +
+								"<li style='border:1px solid #4eaa4c; color: #4eaa4c;'>" + v.answerCnt +
+								"<span>回答</span>\n" +
+								"</li><li>\n" + v.scanCnt + "<span>浏览</span></li>" +
+								"</ul>" +
+								"</div>" +
+								"<div class='box-f2'>" +
+								"<div class='question_title'>" +
+								"<a href='#' id='"+v.id +"'>"+ v.title + "</a>" +
+								"</div>" +
+								"<div class='question_content'>" +
+								v.descAboutTitle +
+								"</div><div class='question_time'>" +
+								"<span>提问人:"+ v.name  +"||提问时间:" + v.createTime + "</span>" +
+								labelStr +
+								"</div></div>" +
+								"<div class='box-f3'><img src='../img/header2.jpg' />" +
+								"</div></section>")
+						initConnectToQuestion(v.id);
+					});
+					getCountOfAsk(num_pagenow);// at the moment the page is 1   the init navigation
+
+				},
+				error: function(data){
+					alert("恭喜，初始化加载都出错了")
+				}
+			})
+		}//get the specific questionList
+		function addTheNavigation(kind,page_id) {
+            var pageId= "";
+		    if(kind == 1){
+		        pageId += "pageOf"
+            } else {
+		        pageId += "page"
+            }
+            pageId += page_id;
+		    console.log(pageId);
+            var two = document.getElementById(pageId);
+            $(two).bind("click",function(){
+                num_pagenow = page_id;
+                getSpecificQuestionList(typeOfTheModule,page_id-1,sort_space);  //init scene type = typeOfTheModule,page = page_id+1,sortKind =sort_space
+            });
+        }//add function to page navigation
+        function getThePageNavigation(pagenow,count,pageCount) {
+            var ul1 = $('#pagination');
+            var str = "<span class=\"layui-laypage-count\">共 "+ count +" 条</span>";
+            var num = count/pageCount+1;
+
+            if(pagenow == 1){
+                str += "<em class='layui-laypage-em'></em><em>上一页</em></span>";
+            }  else {
+                str += "<a href=\"javascript:;\" class=\"layui-laypage-prev layui-disabled\" data-page='pageOf"+ (pagenow - 1) +"' id='pageOf"+ (pagenow- 1) +"'>上一页</a>";
+            }
+
+            console.log("页数:"+num);
+            for(var tmp = 1; tmp < num;tmp++){
+                if((tmp + "") == pagenow){
+                    str += "<em class='layui-laypage-em'></em><em>" + tmp + "  </em></span>"
+                } else {
+                    str += "<a href='javascript:;' data-page='page"+ tmp +"' id='page"+ tmp +"'>" + tmp + "  </a>";
+                }
+            }
+
+            console.log(pagenow + "???" + num);
+            if(num - pagenow <= 1 ){
+                str += "<em class='layui-laypage-em'></em><em>下一页</em></span>";
+            }  else {
+                str += "<a href=\"javascript:;\" class=\"layui-laypage-prev layui-disabled\" data-page='pageOf"+ (pagenow + 1) +"' id='pageOf"+ (pagenow + 1) +"'>下一页</a>";
+            }
+
+            num_navigation = num;
+            num_pagenow = pagenow;
+            console.log("我开始替换了")
+            ul1.html(str);
+
+            if(pagenow == 1){
+            }  else {
+                addTheNavigation(1,pagenow - 1);  //add the function of the navigation
+            }
+
+
+            for(var tmp1 = 1; tmp1 <= num;tmp1++){
+                if((tmp1 + "") == pagenow){
+                } else {
+                    addTheNavigation(2,tmp1);  //add the function of the navigation
+                }
+            }
+
+            if(num - pagenow <= 1 ){
+            }  else {
+                addTheNavigation(1,pagenow + 1);  //add the function of the navigation
+            }
+
+        }  //get the page navigation
+        function getCountOfAsk(pageNow) {
+			$.ajax({
+				type: "get",
+				url: '/art/ques/getCountOfQuestionByType',
+				data:{
+					type:typeOfTheModule
+					,criteria:sort_space
+				},
+				async:false,
+				dataType: 'json',
+				success: function(data){
+				    console.log("init the navigation page");
+				    //get the param
+                    var count = data.count;
+                    var pageCount = data.pageCount;
+                    getThePageNavigation(pageNow,count,pageCount);  //get the navigation of the page
+				},
+				error: function(data){
+					alert("恭喜，拿不到数量了呢？？？")
+				}
+			})
+		}//get the count of the whole questions
+		function sortByNewTime(){
+		    sort_space = 1;
+            num_pagenow = 1;
+			getSpecificQuestionList(typeOfTheModule,"0","1");  //init scene type = typeOfTheModule,page = 0,sortKind = 1
+
+		}  //sorted by time decs
+		function sortOnlyAnswerZero(){
+            sort_space = 4;
+            num_pagenow = 1;
+			getSpecificQuestionList(typeOfTheModule,"0","2");  //init scene type = typeOfTheModule,page = 0,sortKind = 1
+		}  //sorted get only the answer zero
+		function sortByScan(){
+            sort_space = 3;
+            num_pagenow = 1;
+			getSpecificQuestionList(typeOfTheModule,"0","3");  //init scene type = typeOfTheModule,page = 0,sortKind = 1
+		}  //sorted by the scan-count
+		function forwardHandle() {
+			var ul1 = $('#headerbar');
+			if(idspace > 0){
+				ul1.html("<ul id=\"navigation\">\n" +
+						"<li><a href=\"#\">问答</a></li>\n" +
+						"<li><a href=\"#\">练习</a></li>\n" +
+						"<li><a href=\"#\">考试</a></li>\n" +
+						"</ul>\n" +
+						"<ul id=\"log\">\n" +
+						"<li><a href=\"#\" id=\"special\" value='"+ idspace +"'>欢迎："+ namespace + " </a></li>\n" +
+						"<li><span></span></li>\n" +
+						"<li><a href=\"#\" id=\"updatepass\">修改密码</a></li>\n" +
+						"<li><span></span></li>\n" +
+						"<li><a href=\"#\" id=\"quit\">退出</a></li>\n" +
+						"</ul>");
+				initUpdate();
+				theIdOfUser = idspace;
+				initLoadFlag = 55;
+				click_flag = 1;
+			}
+
+
+		}
+		function f7(){
+			if(click_flag != 999){
+                location.href = "/art/statichtml/ask.html";//?name=" + namespace+ "&id=" + idspace;
+			} else {
+				alert("请先登入")
+			}
+		}
+		function addTheScanCount(ids) {
+            $.ajax({
+                type: "get",
+                url: '/art/ques/addTheScanCount',
+                data:{
+                    idStr:ids
+                },
+                async:false,
+                dataType: 'json',
+                success: function(data){
+                    console.log("回复情况：" + data);
+                },
+                error: function(data){
+                    alert("恭喜，访问数量增加失败了呢")
+                }
+            })
+        }
+		function ConnectToQuestion(id){
+			if(click_flag != 999){
+				location.href = "/art/statichtml/questiondetail.html?titleId=" +id;
+			} else {
+				alert("请先登入")
+			}
+		}
+		function initConnectToQuestion(id){
+			var tempId= "";
+			tempId = tempId + id;
+			var one = document.getElementById(tempId);
+			$(one).bind("click",function(){
+                addTheScanCount(id);
+				ConnectToQuestion(id);
+			});
+		}
+		function getUser(){
+			//first ,try get the username and id
+			// 取值时：把获取到的Json字符串转换回对象
+			var userJsonStr = sessionStorage.getItem('user');
+			userEntity = JSON.parse(userJsonStr);
+			idspace = userEntity.id;
+			namespace = userEntity.name;
+			console.log(namespace+"   id:"+idspace);
+		}
+		$(document).ready(function(){
+			getUser();
+			forwardHandle();  //check the request
+			if(initLoadFlag != 55){
+				initNavigation();  //initNavigation
+				initLogin();
+			}
+			initQuestionModule();
+			getSpecificQuestionList("1","0","1");  //init scene type = 1,page = 0,sortKind = 1
+
+		});//initload
+		$(function(){
+			$("#menu a").each(function(index,ele){
+				$(ele).bind("mouseover",function(){
+					$("#menu a[class='menu-item']").removeClass();//已经有menu-item的移除
+					$(ele).toggleClass("menu-item");
+				});
+			});
+		});
+
+
+	</script>
+</html>

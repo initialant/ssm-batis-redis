@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>你画我猜</title>
+		<script type="text/javascript" src="../js/jquery.js"></script>
+		<script type="text/javascript" src="../js/layer.js"></script>
+		<script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
+		<script src="../highlight/highlight.pack.js"></script>
+		<link rel="stylesheet" href="../highlight/styles/default.css">
+		<link rel="stylesheet" href="../css/daydayup.css" />
+		<link rel="stylesheet" href="../css/loginregister.css" />
+		<link rel="stylesheet" href="../css/questiondetail.css" />
+		<link rel="stylesheet" href="../css/common.css" />
+		<script>
+			$(function() {
+				$("#menu a").each(function(index, ele) {
+					$(ele).bind("mouseover", function() {
+						$("#menu a[class='menu-item']").removeClass(); //已经有menu-item的移除
+						$(ele).toggleClass("menu-item");
+					});
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<header>
+			<div id="headerbar">
+				<ul id="navigation">
+					<!--navigation-->
+				</ul>
+			</div>
+		</header>
+		<section id="title">
+			<div id="titlebar">
+				<div id="leftquestion">
+					<a href="#" onclick="f7()">我要提问</a>
+				</div>
+				<div id="rightquestion">
+					<input type="text" placeholder="请输入查询关键字" />
+					<a href="#"><img src="img/ic_search.svg" /></a>
+				</div>
+			</div>
+		</section>
+		<section id="main">
+			<div id="content">
+				<div class="toptitle">
+					<nav class="questionnav">
+						<a href="#" id="return">我要返回主页</a>
+					</nav>
+					<a href="#answereditor">
+						<div class="total_answer" id="answerCnt">
+
+						</div>
+					</a>
+					<span class="question_title_link">问题标题</span>
+				</div>
+				<!--the space obtain the question and answers-->
+			</div>
+			<div class="layui-card-footer" style="text-align: center">
+				<div id="pagination"></div>
+			</div>
+
+
+
+			<!--submit-->
+			<textarea id="editor"></textarea>
+				<script type="text/javascript">
+					CKEDITOR.replace("editor");
+				</script>
+			<div class="answersub">
+				<input id="answersubbtn" type="button" value="提交回答">
+			</div>
+
+
+			<aside id="asideLabel">
+
+			</aside>
+		</section>
+
+		<!--注册div开始-->
+		<div class="loginregister" id="login">
+			<div>
+				<form>
+					<div class="input_box">
+						<input name="userInfo.account" maxlength="15" class="input_cont" type="text" placeholder="用户名/邮箱/手机号" />
+					</div>
+					<div class="input_password">
+						<input type="password" maxlength="15" class="input_cont" placeholder="密码 " />
+					</div>
+					<div class="input_checkbox">
+						<input type="checkbox" style="display: none" id="remember" /><label class="checkbox" for="remember">记住密码</label>
+					</div>
+					<div class="btn">
+						<input type="submit" id="logbtn" class="btn" value="登录" />
+					</div>
+				</form>
+			</div>
+			<div class="msg">Xxxxxxxx</div>
+		</div>
+		<script>
+			$(function() {
+				$("#loglink").bind("click", function() {
+					layer.open({
+						type: 1,
+						title: '登录',
+						//skin: 'layui-layer-rim', //加上边框
+						area: ['398px', '345px'], //宽高:398,222;
+						//content: $('#sublayer'),//content: $('#sublayer').html()会丢失事件
+						resize: false,
+						content: $("#login"),
+						closeBtn: 1,
+					});
+				});
+				$("#logbtn").bind("click", function() {
+					layer.closeAll();
+				});
+			});
+		</script>
+		<!--注册div结束-->
+		<!--登录div开始-->
+		<div class="loginregister" style="height:280px;" id="register">
+			<div>
+				<form>
+					<div class="input_box">
+						<input name="userInfo.account" maxlength="15" class="input_cont" type="text" placeholder="用户名/邮箱/手机号" />
+						<span class="mark">*</span>
+					</div>
+					<div class="input_password">
+						<input type="password" maxlength="15" class="input_cont" placeholder="密码" />
+						<span class="mark">*</span>
+					</div>
+					<div class="input_password">
+						<input type="password" maxlength="15" class="input_cont" placeholder="密码确认" />
+						<span class="mark">*</span>
+					</div>
+					<div class="btn">
+						<input type="submit" class="btn" id="registerbtn" value="注册" />
+					</div>
+				</form>
+			</div>
+			<div class="msg">Xxx</div>
+		</div>
+		<script>
+			$(function() {
+				$("#registerlink").bind("click", function() {
+					layer.open({
+						type: 1,
+						title: '注册',
+						//skin: 'layui-layer-rim', //加上边框
+						area: ['398px', '345px'], //宽高:398,282;
+						//content: $('#sublayer'),//content: $('#sublayer').html()会丢失事件
+						resize: false,
+						content: $("#register"),
+						closeBtn: 1,
+					});
+				});
+				$("#registerbtn").bind("click", function() {
+					layer.closeAll();
+				});
+			});
+		</script>
+		<!--登录div结束-->
+	</body>
+
+
+	<script>
+		//common
+		var namespace = "";//GetQueryString("name");
+		var idspace = "";//GetQueryString("id");
+		var titleidspace = GetQueryString("titleId");
+		var sortKind = 1; //default 1 others 2
+		var theIdOfUser = "";
+		var timestamp   =new Date().getTime();
+		var initLoadFlag = 1;  //default 1
+		var pagenow = 1;  //init the page
+		var labelStrArray=new Array(14);
+		labelStrArray[0]="java";
+		labelStrArray[1]="html";
+		labelStrArray[2]="css";
+		labelStrArray[3]="jquery";
+		labelStrArray[4]="ajax";
+		labelStrArray[5]="jsp";
+		labelStrArray[6]="javascript";
+		labelStrArray[7]="servlet";
+		labelStrArray[8]="structs";
+		labelStrArray[9]="spring";
+		labelStrArray[10]="structs";
+		labelStrArray[11]="mybatis";
+		labelStrArray[12]="database";
+		labelStrArray[13]="others";
+		var answerNum = 0;
+
+
+
+		function addTheAnswerCnt() {
+			$.ajax({
+				type: "post",
+				url: '/art/ques/addTheAnsCount',
+				data:{
+					idStr:titleidspace
+				},
+				async:false,
+				dataType: 'json',
+				success: function(data){
+					console.log("answerCnt++ succeed");
+				},
+				error: function(data){
+					alert("恭喜，初始化回答部分出错了")
+				}
+			})
+		}  //answer_cnt++
+		function initSubmit() {
+			$("#return").click(function(){
+				returnMain();
+			})//init the return
+			$("#answersubbtn").click(function(){
+				var temp =document.getElementsByTagName("p");
+				getDescription = CKEDITOR.instances.editor.getData();
+				console.log("s的内容："+ getDescription);
+
+				answerNum++;
+				$('#answerCnt').html(answerNum + "<br /><span>回答</span>");
+				/*click askup*/
+				$.ajax({
+					type:'post',
+					url : '/art/ques/addAnswer',
+					data:{
+						"problemId":titleidspace
+						,"answerId":idspace
+						,"answer":getDescription
+					},
+					dataType:'json',
+
+					success : function(data) {alert("answer upload success ");
+						console.log("显示最新答案");
+						sortKind = 2;
+						pagenow = 1;
+						addTheAnswerCnt();    //answercnt ++
+						getTheAnswer("0","2");  //init scene page = 0,sortKind = 2
+					},
+
+					error:function(){
+						alert("请联系管理员开通网关");
+					}
+				})
+			})
+		}  // init the submit function
+		function f7(){
+			location.href = "/art/statichtml/ask.html";
+		}  //you want to ask question
+		function returnMain(){
+			location.href = "/art/statichtml/index.html";
+		}  //you want to ask question
+		function returnIndex(){
+			location.href = "/art/statichtml/index.html";
+		}
+		function initQuestionModule() {
+			$("#sponsor_count").bind("click",function(){
+				console.log("票数最多查询");
+				sortKind = 1;
+				pagenow = 1;
+				getTheAnswer("0","1");  //init scene page = 0,sortKind = 1
+			});
+			//add the facetest
+			$("#the_new_answer").bind("click",function(){
+				console.log("显示最新答案");
+				sortKind = 2;
+				pagenow = 1;
+				getTheAnswer("0","2");  //init scene page = 0,sortKind = 2
+			});
+		}   //init the two kind sort
+		function GetQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return unescape(r[2]); return null;
+		}   // when the web is loading , get the information about the user
+		function initUpdate() {
+			//add quit
+			$("#quit").bind("click",function(){
+				theIdOfUser = data.id;
+				var userEntity = {
+					name: "",
+					id: 0
+				};
+				sessionStorage.setItem('user', JSON.stringify(userEntity));
+				var userJsonStr = sessionStorage.getItem('user');
+				userEntity = JSON.parse(userJsonStr);
+				idspace = userEntity.id;
+				namespace = userEntity.name;
+				returnIndex();
+			});
+		}  //init quit
+		function forwardHandle() {
+			var questionlist = $('#content');
+			var ul1 = $('#headerbar');
+			console.log(idspace);
+			if(idspace > 0){
+				ul1.html("<ul id=\"navigation\">\n" +
+						"<li><a href=\"#\">问答</a></li>\n" +
+						"<li><a href=\"#\">练习</a></li>\n" +
+						"<li><a href=\"#\">考试</a></li>\n" +
+						"</ul>\n" +
+						"<ul id=\"log\">\n" +
+						"<li><a href=\"#\" id=\"special\" value='"+ idspace +"'>欢迎："+ namespace + " </a></li>\n" +
+						"<li><span></span></li>\n" +
+						"<li><a href=\"#\" id=\"quit\">退出</a></li>\n" +
+						"</ul>");
+				initUpdate();
+				theIdOfUser = idspace;
+				initLoadFlag = 55;
+			}
+		}  //get the user and id
+		function getTheQuestion(){
+			$.ajax({
+				type: "post",
+				url: '/art/ques/getTheQuestionById',
+				data:{
+					id:titleidspace
+				},
+				async:false,
+				dataType: 'json',
+				success: function(data){
+					var questionlist = $('#content');
+					$('#answerCnt').html(data.answerCnt + "<br /><span>回答</span>");
+
+					var labelStr = "<h4>所有标签：</h4>";
+					for (let i = 0; i < 14; ++i) { //循环便利查看用户的选择项
+						if(i < 5){
+							if(data.firstLabel&(1<<i)){
+								labelStr +="<div class=\"tag\">" + labelStrArray[i]  + "</div>";
+
+							}
+						} else if(i < 10) {
+							if(data.firstLabel&(1<<i-5)){
+								labelStr +="<div class=\"tag\">" + labelStrArray[i]  + "</div>";
+							}
+						} else {
+							if(data.firstLabel&(1<<i-10)){
+								labelStr +="<div class=\"tag\">" + labelStrArray[i]  + "</div>";
+							}
+						}
+					}//add the label
+					$('#asideLabel').html(labelStr);  //update the label
+					answerNum = data.answerCnt;
+
+					questionlist.append(
+							"<section class='content-container'>" +
+							"<section class='questioncontainer'><div>\n" +
+							"<div class='vote_collect_wrapper'>" +
+							"<div class='vote_collect'>" +
+							"<a class='vote_up' id='vote_up_q"+data.id +"' title='顶'>" +
+							"</a>\n" +
+							"<span id='questionVoteCount' class='vote_count'>"+data.voteCnt +"</span>\n" +
+							"<a class='vote_down' id='vote_down_q"+data.id +"' title='踩'>" +
+							"</a></div></div><div class='question-content-detail'>" +
+							"<section><p>"+ data.title + "</p>" + data.descAboutTitle +
+							"</section></div></div><div class='question-userdetail'>" +
+							"<div class='userinfo'>" +
+							"<span class='uname'>"+ data.name +"</span>\n" +
+							"<span class=\"edittime\">" +data.createTime + "</span>\n" +
+							"</div><div id=\"bigheader\">\n" +
+							"<img src=\"img/header2.jpg\" /></div></div></section>\n" +
+							"<div class=\"answer_content\">\n" +
+							"<div class=\"answer_count\">\n" +
+							"<span class=\"answer_order\"><a class=\"selected\" href=\"#\" id='sponsor_count'>按票数排序</a> <a href=\"#\" id='the_new_answer'>显示最新答案</a></span>\n" +
+							"</div><div></div></div></section><section class='answer_list' id='answer_place'></section>")
+					addTheFuncOfSponsor(titleidspace,2);//every answer with its function 1 is the answer flag
+
+				},
+				error: function(data){
+					alert("恭喜，初始化问题出错了")
+				}
+			})
+		}//get the question
+		function removeQuestionModule(tagName,tagClass) {
+			var tagElements = document.getElementsByTagName( tagName );
+			for( var m = 0 ; m < tagElements.length ; m++ ){
+				if( tagElements[m].className == tagClass ){
+					tagElements[m].parentNode.removeChild( tagElements[m] );
+					m--;
+				}
+			}
+		}  //remove the specific tagName with tagClass
+		function addTheFuncOfSponsor(id,type) {
+			var sponseAddStr= "";
+			var sponseDecStr= "";
+
+			if(type == 1){
+				sponseAddStr= "vote_up"+id;
+				sponseDecStr= "vote_down"+id;
+				temp = "answerVoteCount" + id;
+				var four = document.getElementById(sponseAddStr);
+				$(four).bind("click",function(){
+					$.ajax({
+						type: "get",
+						url: '/art/ques/addTheSponsorCnt',
+						data:{
+							typeStr:"3", //add
+							idOfStr:id,
+							authorIdStr:idspace
+						},
+						async:false,
+						dataType: 'json',
+						success: function(data){
+							console.log("回复情况：" + data);
+							if(data.reply == "ok"){
+								console.log("我进来了!!");
+								console.log(temp);
+								var sponsorTemp = document.getElementById(temp);
+								console.log(sponsorTemp.innerText);
+								sponsorTemp.innerText = ""+ ((parseInt(sponsorTemp.innerText))+1);
+							}
+
+						},
+						error: function(data){
+							alert("恭喜，点赞失败")
+						}
+					})
+				});
+
+				var five = document.getElementById(sponseDecStr);
+				$(five).bind("click",function(){
+					$.ajax({
+						type: "get",
+						url: '/art/ques/addTheSponsorCnt',
+						data:{
+							typeStr:"4", //add
+							idOfStr:id,
+							authorIdStr:idspace
+						},
+						async:false,
+						dataType: 'json',
+						success: function(data){
+							console.log("回复情况：" + data);
+							if(data.reply == "ok"){
+								console.log("我进来了!!");
+								console.log(temp);
+								var sponsorTemp = document.getElementById(temp);
+								console.log(sponsorTemp.innerText);
+								sponsorTemp.innerText = ""+(parseInt(sponsorTemp.innerText)-1);
+							}
+						},
+						error: function(data){
+							alert("恭喜，踩人失败")
+						}
+					})
+				});
+
+			} else {
+				sponseAddStr= "vote_up_q"+id;
+				sponseDecStr= "vote_down_q"+id;
+				var temp = "questionVoteCount";
+				var six = document.getElementById(sponseAddStr);
+				$(six).bind("click",function(){
+					$.ajax({
+						type: "get",
+						url: '/art/ques/addTheSponsorCnt',
+						data:{
+							typeStr:"1", //add
+							idOfStr:id,
+							authorIdStr:idspace
+						},
+						async:false,
+						dataType: 'json',
+						success: function(data){
+							console.log("回复情况：" + data);
+							if(data.reply == "ok"){
+								console.log("我进来了!!");
+								console.log(temp);
+								var sponsorTemp = document.getElementById(temp);
+								console.log(sponsorTemp.innerText);
+								sponsorTemp.innerText = ""+ (parseInt(sponsorTemp.innerText)+1);
+							}
+						},
+						error: function(data){
+							alert("恭喜，点赞失败")
+						}
+					})
+				});
+
+				var seven = document.getElementById(sponseDecStr);
+				$(seven).bind("click",function(){
+					$.ajax({
+						type: "get",
+						url: '/art/ques/addTheSponsorCnt',
+						data:{
+							typeStr:"2", //dec
+							idOfStr:id,
+							authorIdStr:idspace
+						},
+						async:false,
+						dataType: 'json',
+						success: function(data){
+							if(data.reply == "ok"){
+								console.log("我进来了!!");
+								console.log(temp);
+								var sponsorTemp1 = document.getElementById(temp);
+								sponsorTemp1.innerText = ""+(parseInt(sponsorTemp1.innerText)-1);
+							}
+						},
+						error: function(data){
+							alert("恭喜，踩人失败")
+						}
+					})
+				});
+
+
+			}
+		}
+		function getTheAnswer(Page,SortKind){
+			$.ajax({
+				type: "post",
+				url: '/art/ques/getAnswerById',
+				data:{
+					id:titleidspace  /*the specific titleId*/
+					,page:Page
+					,limit:"3"
+					,sortKind:SortKind
+				},
+				async:false,
+				dataType: 'json',
+				success: function(data){
+					removeQuestionModule("article","answer_detail");
+
+					var questionlist = $('#answer_place');
+					$.each(data, function(k, v) {
+						console.log("序号："+ k);
+						questionlist.append(
+								"<article class=\"answer_detail\">\n" +
+								"<div class=\"vote_collect_wrapper\">\n" +
+								"<div class=\"vote_collect\">\n" +
+								"<a class=\"vote_up\" id='vote_up"+ v.id +"' title=\"顶\">\n" +
+								"</a>\n" +
+								"<span id=\"answerVoteCount"+v.id +"\" class=\"vote_count\">" +v.sponsorCnt + "</span>\n" +
+								"<a class=\"vote_down\" id='vote_down" +v.id + "' title=\"踩\">\n" +
+								"</a>\n" +
+								"</div>\n" +
+								"</div>\n" +
+								"<div class=\"answer-content-detail\">\n" +
+								"<section>\n" + v.answer +
+								"</section>\n" +
+								"</div>\n" +
+								"<div class=\"userdetail\">\n" +
+								"<div class=\"userinfo\">\n" +
+								"<span class=\"uname\">" +v.name + "</span>\n" +
+								"<span class=\"edittime\">" + v.answerTime + "</span>\n" +
+								"</div>\n" +
+								"<div>\n" +
+								"<img src=\"img/header2.jpg\" />\n" +
+								"</div>\n" +
+								"</div>\n" +
+								"</article>")
+								addTheFuncOfSponsor(v.id,1);//every answer with its function 1 is the answer flag
+					});
+					getCountOfAns(pagenow);// at the moment the page is 1   the init navigation
+
+				},
+				error: function(data){
+					alert("恭喜，初始化回答部分出错了")
+				}
+			})
+		}//get the specific answerList
+		function getCountOfAns(pageAtNow) {
+			$.ajax({
+				type: "get",
+				url: '/art/ques/getCountOfAnswerByProblemId',
+				data:{
+					id:titleidspace
+				},
+				async:false,
+				dataType: 'json',
+				success: function(data){
+					console.log("init the navigation page");
+					//get the param
+					var count = data.count;
+					var pageCount = data.pageCount;
+					getThePageNavigation(pageAtNow,count,pageCount);  //get the navigation of the page
+				},
+				error: function(data){
+					alert("恭喜，拿不到数量了呢？？？")
+				}
+			})
+		}//get the count of the whole questions
+		function addTheNavigation(kind,page_id) {
+			var pageId= "";
+			if(kind == 1){
+				pageId += "pageOf"
+			} else {
+				pageId += "page"
+			}
+			pageId += page_id;
+			console.log(pageId);
+			var two = document.getElementById(pageId);
+			$(two).bind("click",function(){
+				pagenow = page_id;
+				getTheAnswer(pagenow-1,sortKind);
+			});
+		}//add function to page navigation
+		function getThePageNavigation(pagenow,count,pageCount) {
+			var ul1 = $('#pagination');
+			var str = "<span class=\"layui-laypage-count\">共 "+ count +" 条</span>";
+			var num = count/pageCount+1;
+
+			if(pagenow == 1){
+				str += "<em class='layui-laypage-em'></em><em>上一页</em></span>";
+			}  else {
+				str += "<a href=\"javascript:;\" class=\"layui-laypage-prev layui-disabled\" data-page='pageOf"+ (pagenow - 1) +"' id='pageOf"+ (pagenow- 1) +"'>上一页</a>";
+			}
+
+			console.log("页数:"+num);
+			for(var tmp = 1; tmp < num;tmp++){
+				if((tmp + "") == pagenow){
+					str += "<em class='layui-laypage-em'></em><em>" + tmp + "  </em></span>"
+				} else {
+					str += "<a href='javascript:;' data-page='page"+ tmp +"' id='page"+ tmp +"'>" + tmp + "  </a>";
+				}
+			}
+
+			console.log(pagenow + "???" + num);
+			if(num - pagenow <= 1 ){
+				str += "<em class='layui-laypage-em'></em><em>下一页</em></span>";
+			}  else {
+				str += "<a href=\"javascript:;\" class=\"layui-laypage-prev layui-disabled\" data-page='pageOf"+ (pagenow + 1) +"' id='pageOf"+ (pagenow + 1) +"'>下一页</a>";
+			}
+
+			num_navigation = num;
+			num_pagenow = pagenow;
+			console.log("我开始替换了")
+			ul1.html(str);
+
+			if(pagenow == 1){
+			}  else {
+				addTheNavigation(1,pagenow - 1);  //add the function of the navigation
+			}
+
+
+			for(var tmp1 = 1; tmp1 <= num;tmp1++){
+				if((tmp1 + "") == pagenow){
+				} else {
+					addTheNavigation(2,tmp1);  //add the function of the navigation
+				}
+			}
+
+			if(num - pagenow <= 1 ){
+			}  else {
+				addTheNavigation(1,pagenow + 1);  //add the function of the navigation
+			}
+
+		}  //get the page navigation
+		function getUser(){
+			//first ,try get the username and id
+			// 取值时：把获取到的Json字符串转换回对象
+			var userJsonStr = sessionStorage.getItem('user');
+			userEntity = JSON.parse(userJsonStr);
+			idspace = userEntity.id;
+			namespace = userEntity.name;
+			console.log(namespace+"   id:"+idspace);
+		}
+		$(document).ready(function(){
+			getUser();
+			$("#menu a").each(function(index, ele) {
+				$(ele).bind("mouseover", function() {
+					$("#menu a[class='menu-item']").removeClass(); //已经有menu-item的移除
+					$(ele).toggleClass("menu-item");
+				});
+			});
+
+
+			forwardHandle();  //check the request
+			if(initLoadFlag != 55){
+				returnIndex();
+			}
+			getTheQuestion();  //load the problem
+			getTheAnswer("0","1");   //load the answer
+			initQuestionModule();  //add the act about the sort of answerlist
+			initSubmit();//init submit
+
+		});//initload
+		$(function(){
+			$("#menu a").each(function(index,ele){
+				$(ele).bind("mouseover",function(){
+					$("#menu a[class='menu-item']").removeClass();//已经有menu-item的移除
+					$(ele).toggleClass("menu-item");
+				});
+			});
+		});
+
+	</script>
+</html>

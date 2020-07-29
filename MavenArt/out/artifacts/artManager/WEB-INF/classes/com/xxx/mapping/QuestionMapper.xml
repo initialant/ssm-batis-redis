@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.dao.QuestionMapper">
+
+	<resultMap type="com.xxx.pojo.Question" id="QuestionsResultMap">
+		<id column="id" property="id"/>
+		<result column="title" property="title"/>
+		<result column="type1" property="type"/>
+		<result column="author" property="author"/>
+		<result column="description" property="description"/>
+		<result column="newest_naswer_time" property="time"/>
+		
+
+		<collection property="questions" ofType="com.xxx.pojo.Question">
+			<id column="id" property="id"/>
+			<result column="title" property="title"/>
+			<result column="type1" property="type"/>
+			<result column="author" property="author"/>
+			<result column="description" property="description"/>
+			<result column="newest_answer_time" property="createTime"/>
+		</collection>
+		
+	</resultMap>
+
+    <select id="queryQuestion"  resultMap="QuestionsResultMap">
+		select * from questions
+	</select>
+	
+	
+	<insert id="addAsk"  parameterType="com.xxx.pojo.Question">
+		insert into questions(title,author,type1,description) value(#{title},#{author},#{type},#{descAboutTitle})
+	</insert>
+	
+	<insert id="insertAsk"  parameterType="com.xxx.pojo.Question">
+		insert into questions(title,author,type1,description,label1,label2,label3) value(#{title},#{author},#{type},#{descAboutTitle},#{firstLabel},#{secondLabel},#{thirdLabel})
+	</insert>
+	
+	<!--查条数和具体的所有-->
+	<select id="getNumByType"  parameterType="int" resultType="int">
+		select count(id) from questions where type1 = #{type}
+	</select>
+	
+	<select id="getNumByType1"  parameterType="int" resultType="int">
+		select count(id) from questions where  answer_cnt = 0 and type1 = #{type}
+	</select>
+	
+	<select id="getNumByType2"  parameterType="int" resultType="int">
+		select count(id) from questions where type1 = #{type}
+	</select>
+	
+	<select id="getNumByProblemId"  parameterType="int" resultType="int">
+		select count(id) from ans where problem_id = #{id}
+	</select>
+	
+	<!--重新写一个对应-->
+	<resultMap type="com.xxx.pojo.Question" id="QuestionsResultByTypeMap">
+		<id column="id" property="id"/>
+		<result column="title" property="title"/>
+		<result column="type1" property="type"/>
+		<result column="author" property="author"/>
+		<result column="description" property="descAboutTitle"/>
+		<result column="newest_answer_time" property="createTime"/>
+		<result column="answer_cnt" property="answerCnt"/>
+		<result column="scan_cnt" property="scanCnt"/>
+		<result column="vote_count" property="voteCnt"/>
+		<result column="name" property="name"/>
+		<result column="label1" property="firstLabel"/>
+		<result column="label2" property="secondLabel"/>
+		<result column="label3" property="thirdLabel"/>
+		
+		<collection property="questions" ofType="com.xxx.pojo.Question">
+			<id column="id" property="id"/>
+			<result column="title" property="title"/>
+			<result column="type1" property="type"/>
+			<result column="author" property="author"/>
+			<result column="description" property="descAboutTitle"/>
+			<result column="newest_answer_time" property="createTime"/>
+			<result column="answer_cnt" property="answerCnt"/>
+			<result column="scan_cnt" property="scanCnt"/>
+			<result column="vote_count" property="voteCnt"/>
+			<result column="name" property="name"/>
+			<result column="label1" property="firstLabel"/>
+			<result column="label2" property="secondLabel"/>
+			<result column="label3" property="thirdLabel"/>
+		</collection>
+	</resultMap>
+	
+	<select id="queryQuestionByType"  parameterType="int" resultMap="QuestionsResultByTypeMap">
+		SELECT
+			id,
+			title,
+			type1,
+			author,
+			description,
+			newest_answer_time,
+			scan_cnt,
+			answer_cnt,
+			vote_count,
+			label1,
+			label2,
+			label3,
+			name
+		FROM
+			questions
+		WHERE
+			type1 = #{type}
+	</select>
+	
+	
+	
+	<select id="queryByTime"  parameterType="com.xxx.pojo.SearchCriteria" resultMap="QuestionsResultByTypeMap">
+		SELECT
+		id,
+		title,
+		type1,
+		author,
+		description,
+		newest_answer_time,
+		scan_cnt,
+		answer_cnt,
+		vote_count,
+		name,
+		label1,
+		label2,
+		label3
+		FROM (SELECT
+		q.id,
+		q.title,
+		q.type1,
+		q.author,
+		q.description,
+		q.newest_answer_time,
+		q.scan_cnt,
+		q.answer_cnt,
+		q.vote_count,
+		q.label1,
+		q.label2,
+		q.label3,
+		u.name
+		FROM
+		questions q,user u
+		WHERE
+		q.type1 = #{type} and q.author = u.id
+		ORDER BY q.newest_answer_time desc) table1  LIMIT #{theBegin},#{theOver}
+	</select>
+	
+	<select id="queryAnswerZero"  parameterType="com.xxx.pojo.SearchCriteria" resultMap="QuestionsResultByTypeMap">
+		SELECT
+		id,
+		title,
+		type1,
+		author,
+		description,
+		newest_answer_time,
+		scan_cnt,
+		answer_cnt,
+		vote_count,
+		name,
+		label1,
+		label2,
+		label3
+		FROM (SELECT
+		q.id,
+		q.title,
+		q.type1,
+		q.author,
+		q.description,
+		q.newest_answer_time,
+		q.scan_cnt,
+		q.answer_cnt,
+		q.vote_count,
+		q.label1,
+		q.label2,
+		q.label3,
+		u.name
+		FROM
+		questions q,user u
+		WHERE
+		q.type1 = #{type} and q.answer_cnt = 0 and q.author = u.id
+		ORDER BY
+		q.newest_answer_time desc)table1  LIMIT #{theBegin},#{theOver}
+	</select>
+	
+	<select id="queryByScanCnt"  parameterType="com.xxx.pojo.SearchCriteria" resultMap="QuestionsResultByTypeMap">
+		SELECT
+		id,
+		title,
+		type1,
+		author,
+		description,
+		newest_answer_time,
+		scan_cnt,
+		answer_cnt,
+		vote_count,
+		name,
+		label1,
+		label2,
+		label3
+		FROM (SELECT
+		q.id,
+		q.title,
+		q.type1,
+		q.author,
+		q.description,
+		q.newest_answer_time,
+		q.scan_cnt,
+		q.answer_cnt,
+		q.vote_count,
+		q.label1,
+		q.label2,
+		q.label3,
+		u.name
+		FROM
+		questions q,user u
+		WHERE
+		q.type1 = #{type} and q.author = u.id
+		ORDER BY q.scan_cnt desc) table1  LIMIT #{theBegin},#{theOver}
+	</select>
+	
+	<select id="queryById"  parameterType="int" resultMap="QuestionsResultByTypeMap">
+		SELECT
+		q.id,
+		q.title,
+		q.type1,
+		q.author,
+		q.description,
+		q.newest_answer_time,
+		q.scan_cnt,
+		q.answer_cnt,
+		q.vote_count,
+		q.label1,
+		q.label2,
+		q.label3,
+		u.name
+		FROM
+		questions q,user u
+		WHERE
+		q.id = #{id} and q.author = u.id
+
+	</select>
+	
+	<!--重新写一个对应-->
+	<resultMap type="com.xxx.pojo.Answer" id="AnswersResultById">
+		<id column="id" property="id"/>
+		<result column="title" property="title"/>
+		<result column="answer" property="answer"/>
+		<result column="sponsor_count" property="sponsorCnt"/>
+		<result column="problem_id" property="problemId"/>
+		<result column="create_time" property="answerTime"/>
+		<result column="name" property="name"/>
+		<collection property="answers" ofType="com.xxx.pojo.Answer">
+			<id column="id" property="id"/>
+			<result column="title" property="title"/>
+			<result column="answer" property="answer"/>
+			<result column="sponsor_count" property="sponsorCnt"/>
+			<result column="problem_id" property="problemId"/>
+			<result column="create_time" property="answerTime"/>
+			<result column="name" property="name"/>
+		</collection>
+	</resultMap>
+	
+	<select id="getTheQuestionById"  parameterType="int" resultMap="QuestionsResultByTypeMap">
+		SELECT
+		id,
+		title,
+		type1,
+		author,
+		description,
+		newest_answer_time,
+		scan_cnt,
+		answer_cnt,
+		vote_count
+		FROM
+		questions
+		WHERE
+		id = #{id}
+
+	</select>
+	
+	<select id="getAnswerById"  parameterType="com.xxx.pojo.SearchCriteria" resultMap="AnswersResultById">
+		SELECT
+			q.id,
+			q.problem_id,
+			q.sponsor_count,
+			q.create_time,
+			q.answer,
+			u.name
+		FROM
+			ans q, user u
+		WHERE
+			q.problem_id = #{id} and q.answer_id = u.id
+		ORDER BY
+			q.create_time desc LIMIT #{theBegin},#{theOver}
+
+	</select>
+	
+	
+	<!--写错了的。-->
+	<select id="getAnswerByTime"  parameterType="com.xxx.pojo.SearchCriteria" resultMap="AnswersResultById">
+		SELECT
+			q.id,
+			q.problem_id,
+			q.sponsor_count,
+			q.create_time,
+			q.answer,
+			u.name
+		FROM
+			ans q, user u
+		WHERE
+			q.problem_id = #{id} and q.answer_id = u.id
+		ORDER BY
+			q.sponsor_count desc LIMIT #{theBegin},#{theOver}
+
+	</select>
+	
+	
+	<insert id="insertAnswer"  parameterType="com.xxx.pojo.Answer">
+		insert into ans(problem_id,answer,answer_id) value(#{problemId},#{answer},#{id})
+	</insert>
+	
+	
+	<update id="addTheScanCount"  parameterType="int">
+		update questions set scan_cnt = scan_cnt + 1  where id = #{id}
+	</update>
+	
+	<update id="addTheAnsCount"  parameterType="int">
+		update questions set answer_cnt = answer_cnt + 1  where id = #{id}
+	</update>
+	
+	<update id="decTheAnsCount"  parameterType="int">
+		update questions set answer_cnt = answer_cnt - 1  where id = #{id}
+	</update>
+	
+	
+	
+	<!--重新写一个对应-->
+	<resultMap type="com.xxx.pojo.Sponsor" id="getSponsor">
+		<id column="id" property="id"/>
+		<result column="type" property="type"/>
+		<result column="target_id" property="idOf"/>
+		<result column="author_id" property="authorId"/>
+	</resultMap>
+	
+	<select id="sponsorCheck" parameterType="com.xxx.pojo.Sponsor" resultMap="getSponsor">
+		select id from sponsor where target_id = #{idOf} and author_id = #{authorId} and type = #{type}
+	</select>
+	
+	<select id="sponsorCheck1" parameterType="com.xxx.pojo.Sponsor" resultMap="getSponsor">
+		select id from cnt_que_sponser where answer_id = #{idOf} and author_id = #{authorId}
+	</select>
+	
+	<update id="decTheSponserOfQuestion"  parameterType="int">
+		update questions set vote_count = vote_count - 1  where id = #{id}
+	</update>
+	
+	<update id="addTheSponserOfQuestion"  parameterType="int">
+		update questions set vote_count = vote_count + 1  where id = #{id}
+	</update>
+	
+	<update id="decTheSponserOfAns"  parameterType="int">
+		update ans set sponsor_count = sponsor_count - 1  where id = #{id}
+	</update>
+	
+	<update id="addTheSponserOfAns"  parameterType="int">
+		update ans set sponsor_count = sponsor_count + 1  where id = #{id}
+	</update>
+	
+	<insert id="insertSponsor"  parameterType="com.xxx.pojo.Sponsor">
+		insert into sponsor(type,target_id,author_id) value(#{type},#{idOf},#{authorId})
+	</insert>
+
+</mapper>

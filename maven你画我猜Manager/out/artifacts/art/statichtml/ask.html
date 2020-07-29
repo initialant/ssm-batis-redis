@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>你画我猜</title>
+		<script type="text/javascript" src="../js/jquery.js"></script>
+		<script type="text/javascript" src="../js/layer.js"></script>
+		<script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
+		<script src="../highlight/highlight.pack.js"></script>
+		<link rel="stylesheet" href="../highlight/styles/default.css">
+		<link rel="stylesheet" href="../css/daydayup.css" />
+		<link rel="stylesheet" href="../css/ask.css" />
+		<link rel="stylesheet" href="../css/loginregister.css" />
+		<link rel="stylesheet" href="../css/common.css" />
+	</head>
+
+	<body>
+		<header>
+			<div id="headerbar">
+				<ul id="navigation">
+					<!--navigation-->
+				</ul>
+			</div>
+		</header>
+		<section id="title">
+			<div id="titlebar">
+				<div id="leftquestion">
+					<a href="#">我要提问</a>
+				</div>
+				<div id="rightquestion">
+					<input type="text" placeholder="请输入查询关键字" />
+					<a href="#"><img src="img/ic_search.svg" /></a>
+				</div>
+			</div>
+		</section>
+		<section id="main">
+			<div id="content">
+				<div class="toptitle">
+					<nav class="questionnav">
+						<a href="#" id="return">我要返回主页</a>
+					</nav>
+				</div>
+				<div class="form-item">
+					<div class="form-label">
+						<label>标题:</label>
+					</div>
+					<div class="form-input-inline">
+						<input type="text" class="ask" name="roleId" value="" placeholder="你有什么技术问题，请在此输入" />
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="form-label">
+						<label>分类:</label>
+					</div>
+					<div class="form-input-inline">
+						<span class="choice">
+								<input type="radio" id="rdo1" name="radio" checked="checked" />
+								<label for="rdo1">技术问答</label>
+						</span>
+						<span class="choice">
+								<input type="radio" id="rdo3" name="radio" />
+								<label for="rdo3">面试题</label>
+							</span>
+						<span class="choice">
+								<input type="radio" id="rdo4" name="radio" />
+								<label for="rdo4">即时问答</label>
+							</span>
+
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="form-label-small">
+						<label>标签:</label>
+					</div>
+					<div class="form-input-inline-small">
+						<span class="tagchoice">
+								<input type="checkbox" id="check1" name="check" checked="checked"/>
+								<label for="check1">java</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check2" name="check" />
+								<label for="check2">html</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check3" name="check" />
+								<label for="check3">css</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check4" name="check" />
+								<label for="check4">jquery</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check5" name="check" />
+								<label for="check5">ajax</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check6" name="check" />
+								<label for="check6">jsp</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check7" name="check" />
+								<label for="check7">javascript</label>
+							</span>
+					</div>
+				</div>
+				<div class="form-item">
+					<div class="form-label-small">
+						<label></label>
+					</div>
+					<div class="form-input-inline-small">
+						<span class="tagchoice">
+								<input type="checkbox" id="check8" name="check" />
+								<label for="check8">servlet</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check9" name="check" />
+								<label for="check9">struts</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check10" name="check" />
+								<label for="check10">spring</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check11" name="check" />
+								<label for="check11">struts</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check12" name="check" />
+								<label for="check12">mybatis</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check13" name="check" />
+								<label for="check13">database</label>
+							</span>
+						<span class="tagchoice">
+								<input type="checkbox" id="check14" name="check" />
+								<label for="check14">others</label>
+						</span>
+					</div>
+				</div>
+				<div style="margin-top: 50px;">
+					<textarea id="editor"></textarea>
+					<script type="text/javascript">
+						CKEDITOR.replace("editor");
+					</script>
+				</div>
+				<div class="answersub">
+					<input id="answersubbtn" type="button" value="提交回答">
+				</div>
+			</div>
+			<aside>
+				<h4>所有标签：</h4>
+				<div class="tag">java</div>
+				<div class="tag">mysql</div>
+				<div class="tag">struts</div>
+				<div class="tag">html</div>
+			</aside>
+		</section>
+
+
+
+		<!--注册div开始-->
+		<div class="loginregister" id="login">
+			<div>
+				<form>
+					<div class="input_box">
+						<input id="inputName" name="userInfo.account" maxlength="15" class="input_cont" type="text" placeholder="用户名/邮箱/手机号"/>
+					</div>
+					<div class="input_password">
+						<input id="inputPassword" type="password" maxlength="15" class="input_cont" placeholder="密码 "/>
+					</div>
+					<div class="input_checkbox">
+						<input type="checkbox" style="display: none" id="remember"/><label class="checkbox" for="remember">记住密码</label>
+					</div>
+					<div class="btn">
+						<input type="button" id="logbtn" class="btn" value="登录" />
+					</div>
+				</form>
+			</div>
+			<div class="msg">Xxxxxxxx</div>
+		</div>
+		<!--注册div结束-->
+		<!--登录div开始-->
+		<div class="loginregister" style="height:280px;" id="register">
+			<div>
+				<form>
+					<div class="input_box">
+						<input id="newname" name="name" maxlength="15" class="input_cont" type="text" placeholder="用户名/邮箱/手机号"/>
+						<span class="mark">*</span>
+					</div>
+					<div class="input_password">
+						<input id="newpassword1" name="password" type="password" maxlength="15" class="input_cont" placeholder="密码"/>
+						<span class="mark">*</span>
+					</div>
+					<div class="input_password">
+						<input id="newpassword2" type="password" maxlength="15" class="input_cont" placeholder="密码确认"/>
+						<span class="mark">*</span>
+					</div>
+					<div class="btn">
+						<input type="button" class="btn" id="registerbtn" value="注册"  />
+					</div>
+				</form>
+			</div>
+			<div class="msg">Xxx</div>
+		</div>
+
+		<div class="loginregister" style="height:280px;" id="updatePassword">
+			<div>
+				<form>
+					<div class="input_password">
+						<input id="oldPassword" name="password" type="password" maxlength="15" class="input_cont" placeholder="密码"/>
+						<span class="mark">*</span>
+					</div>
+					<div class="input_password">
+						<input id="newPassSpec" type="password" maxlength="15" class="input_cont" placeholder="密码确认"/>
+						<span class="mark">*</span>
+					</div>
+					<div class="btn">
+						<input type="button" class="btn" id="updateAct" value="修改密码"  />
+					</div>
+				</form>
+			</div>
+			<div class="msg">Xxx</div>
+		</div>
+		<!--登录div结束-->
+		</body>
+
+
+
+
+		<script>
+			$(function() {
+				$("#registerlink").bind("click", function() {
+					layer.open({
+						type: 1,
+						title: '注册',
+						//skin: 'layui-layer-rim', //加上边框
+						area: ['398px', '345px'], //宽高:398,282;
+						//content: $('#sublayer'),//content: $('#sublayer').html()会丢失事件
+						resize: false,
+						content: $("#register"),
+						closeBtn: 1,
+					});
+				});
+				$("#registerbtn").bind("click", function() {
+					layer.closeAll();
+				});
+			});
+		</script>
+		<!--登录div结束-->
+	</body>
+
+	<script>
+		//记录问题type
+		var temptype;
+		var namespace = "";//GetQueryString("name");
+		var idspace = "";//GetQueryString("id");
+		var label1 = 0;  //this 1 for java  ....  5bit to get the label
+		var label2 = 0;
+		var label3 = 0;
+
+
+		function chooseType() {
+			var sexNum = document.getElementsByName("radio"); //获取radio对象组，返回值是数组类型的
+			var sex = "";  //用于保存用户的选项
+			for (let i = 0; i < sexNum.length; ++i) { //循环便利查看用户的选择项
+				if (sexNum[i].checked) { //checked代表用户的选择
+					sex = sexNum[i];
+				}
+			}
+			//console.log(sex);
+			return sex.id
+		}
+
+		function GetQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return unescape(r[2]); return null;
+		}
+
+		function returnIndex(){
+			location.href = "/art/statichtml/index.html";
+		}
+
+
+		$(function() {
+			$("#menu a").each(function(index, ele) {
+				$(ele).bind("mouseover", function() {
+					$("#menu a[class='menu-item']").removeClass(); //已经有menu-item的移除
+					$(ele).toggleClass("menu-item");
+				});
+			});
+
+			//get the description
+			var getDescription = "";
+
+
+			$("#answersubbtn").click(function(){
+				temptype = chooseType();
+				var temp =document.getElementsByTagName("p");
+				getDescription = CKEDITOR.instances.editor.getData();
+				console.log("s的内容："+ getDescription);
+				if(temptype == "rdo1"){
+					temptype = 1;
+				} else if (temptype == "rdo3"){
+					temptype = 2;
+				} else if (temptype == "rdo4"){
+					temptype = 3;
+				}
+				console.log(temptype);
+				getTheLabel();//get the labels
+
+				/!*click askup*!/
+				$.ajax({
+					type:'post',
+					url : '/art/ques/submitAsk',
+					data:{
+						"title":$(".ask").val(),
+						"type":temptype,
+						"author":idspace,
+						"description":getDescription,
+						"label1":label1,
+						"label2":label2,
+						"label3":label3
+					},
+					dataType:'json',
+
+					success : function(data) {
+						alert("ask question upload success ");
+						returnIndex();
+					},
+
+					error:function(){
+						alert("请联系管理员开通网关");
+					}
+				})
+			})
+		});
+		//common
+		var click_flag = 999;
+		var theIdOfUser = "";
+		var timestamp   =new Date().getTime();
+		var initLoadFlag = 1;  //default 1
+
+		function getTheLabel() {
+			label1 = 0;
+			label2 = 0;
+			label3 = 0;
+			var labelNum = document.getElementsByName("check"); //get the check Objects
+			for (let i = 0; i < labelNum.length; ++i) { //循环便利查看用户的选择项
+				if (labelNum[i].checked) { //checked代表用户的选择
+					if(i < 5){
+						label1 |= (1<<i);
+					} else if(i < 10) {
+						label2 |= (1<<(i-5));
+					} else {
+						label3 |= (1<<(i-10));
+					}
+				}
+			}
+			console.log(label1);
+			console.log(label2);
+			console.log(label3);
+		}  //get the checked label
+		function initUpdate() {
+			//修改密码弹窗
+			$("#updatepass").bind("click",function(){
+				layer.open({
+					type:1,
+					title:'修改密码',
+					area: ['398px', '345px'], //宽高:398,282;
+					resize:false,
+					content:$("#updatePassword"),
+					closeBtn:1,
+				});
+			});
+
+			//update the password
+			$("#updateAct").bind("click",function(){
+				registFlag = 0;
+				layer.closeAll();
+				var registFlag;
+				//new
+				var theOldPass = $('#oldPassword').val();
+				var theNewPassSpec = $('#newPassSpec').val();
+
+				if(theOldPass == null || theOldPass == ''){
+					alert("密码不能为空，请重新进入修改密码功能");
+				} else {
+					if(theNewPassSpec == theOldPass){
+						registFlag = 1;  //申请注册标记
+					} else {
+						alert("密码不一致，请重新进入修改密码功能")
+					}
+
+				}
+
+				if(registFlag == 1){
+					/*click login*/
+					$.ajax({
+						type:'get',
+						url : '/art/user/updateTheUser',
+						data:{
+							"id":theIdOfUser,
+							"password":theNewPassSpec
+						},
+						dataType:'json',
+
+						success : function(data) {
+							console.log("succeed");
+						},
+
+						error:function(){
+							alert("请联系管理员开通网关");
+							var ul= $('#log');
+							var ul1 = $('#headerbar');
+						}
+					})
+				}
+			});
+
+			//add quit
+			$("#quit").bind("click",function(){
+				var userEntity = {
+					name: "",
+					id: 0
+				};
+				sessionStorage.setItem('user', JSON.stringify(userEntity));
+				var userJsonStr = sessionStorage.getItem('user');
+				userEntity = JSON.parse(userJsonStr);
+				idspace = userEntity.id;
+				namespace = userEntity.name;
+				returnIndex();
+			});
+		}  //init updateKey
+		function initLogin() {
+			$("#loglink").bind("click",function(){
+				layer.open({
+					type:1,
+					title:'登录',
+					//skin: 'layui-layer-rim', //加上边框
+					area: ['398px', '345px'], //宽高:398,222;
+					//content: $('#sublayer'),//content: $('#sublayer').html()会丢失事件
+					resize:false,
+					content:$("#login"),
+					closeBtn:1,
+				});
+			});
+			$("#logbtn").bind("click",function(){
+				layer.closeAll();
+
+				//new
+				var name = $('#inputName').val();
+				if(name == null || name == ''){
+					alert("请输入用户名");
+				} else {
+					var password = $('#inputPassword').val();
+					if(password == null || password == ''){
+						alert("请输入密码");
+					} else {
+						click_flag = 1;
+					}
+				}
+
+				if(click_flag == 1){
+					/*click login*/
+					$.ajax({
+						type:'get',
+						url : '/art/user/loginCheck',
+						data:{
+							"name":$('#inputName').val(),
+							"password":$('#inputPassword').val()
+						},
+						dataType:'json',
+
+						success : function(data) {
+							var ul1 = $('#headerbar');
+							ul1.html("<ul id=\"navigation\">\n" +
+									"<li><a href=\"#\">问答</a></li>\n" +
+									"<li><a href=\"#\">练习</a></li>\n" +
+									"<li><a href=\"#\">考试</a></li>\n" +
+									"</ul>\n" +
+									"<ul id=\"log\">\n" +
+									"<li><a href=\"#\" id=\"special\" value='"+ data.id +"'>欢迎："+ data.name + " </a></li>\n" +
+									"<li><span></span></li>\n" +
+									"<li><a href=\"#\" id=\"updatepass\">修改密码</a></li>\n" +
+									"<li><span></span></li>\n" +
+									"<li><a href=\"#\" id=\"quit\">退出</a></li>\n" +
+									"</ul>");
+							//add updateKey
+							initUpdate();
+							theIdOfUser = data.id;
+
+						},
+
+						error:function(){
+							alert("请联系管理员开通网关");
+							var ul= $('#log');
+							var ul1 = $('#headerbar');
+						}
+					})
+				}
+			});
+
+			//注册头
+			$("#registerlink").bind("click",function(){
+				layer.open({
+					type:1,
+					title:'注册',
+					//skin: 'layui-layer-rim', //加上边框
+					area: ['398px', '345px'], //宽高:398,282;
+					//content: $('#sublayer'),//content: $('#sublayer').html()会丢失事件
+					resize:false,
+					content:$("#register"),
+					closeBtn:1,
+				});
+			});
+
+			//注册(弹出窗的)
+			$("#registerbtn").bind("click",function(){
+				registFlag = 0;
+				layer.closeAll();
+				var registFlag;
+				//new
+				var theNewName = $('#newname').val();
+				var theNewPassword1 = $('#newpassword1').val();
+				var theNewPassword2 = $('#newpassword2').val();
+
+				if(theNewName == null || theNewName == ''){
+					alert("请输入用户名");
+				} else {
+					if(theNewPassword1 == null || theNewPassword1 == ''){
+						alert("请输入密码");
+					} else {
+						if(theNewPassword1 == theNewPassword2){
+							registFlag = 1;  //申请注册标记
+						}
+					}
+				}
+
+				if(registFlag == 1){
+					/*click login*/
+					$.ajax({
+						type:'get',
+						url : '/art/user/regist',
+						data:{
+							"name":theNewName,
+							"password":theNewPassword2
+						},
+						dataType:'json',
+
+						success : function(data) {
+							var ul1 = $('#headerbar');
+							ul1.html("<ul id=\"navigation\">\n" +
+									"<li><a href=\"#\">问答</a></li>\n" +
+									"<li><a href=\"#\">练习</a></li>\n" +
+									"<li><a href=\"#\">考试</a></li>\n" +
+									"</ul>\n" +
+									"<ul id=\"log\">\n" +
+									"<li><a href=\"#\" id=\"special\" value='"+ data.id +"'>欢迎："+ data.name + " </a></li>\n" +
+									"<li><span></span></li>\n" +
+									"<li><a href=\"#\" id=\"updatePass\">修改密码</a></li>\n" +
+									"<li><span></span></li>\n" +
+									"<li><a href=\"#\" id=\"quit\">退出</a></li>\n" +
+									"</ul>");
+							//add updateKey
+							initUpdate();
+							theIdOfUser = data.id;
+
+						},
+
+						error:function(){
+							alert("请联系管理员开通网关");
+							var ul= $('#log');
+							var ul1 = $('#headerbar');
+						}
+					})
+				}
+			});
+		}   //init login and register
+		function initNavigation() {
+			//change the view
+			var ul1 = $('#headerbar');
+			ul1.html("<ul id=\"navigation\">\t\t\t\n" +
+					"\t\t\t\t\t<li><a href=\"#\">首页</a></li>\n" +
+					"\t\t\t\t\t<li><a href=\"#\">问答</a></li>\n" +
+					"\t\t\t\t</ul>\n" +
+					"\t\t\t\t<ul id=\"log\">\t\t\t\t\n" +
+					"\t\t\t\t\t<li><a href=\"#\" id=\"loglink\">登录</a></li>\n" +
+					"\t\t\t\t\t<li><span></span></li>\n" +
+					"\t\t\t\t\t<li><a href=\"#\" id=\"registerlink\">注册</a></li>\n" +
+					"\t\t\t\t</ul>");
+		} //init the navigation
+		function forwardHandle() {
+			var questionlist = $('#content');
+			var ul1 = $('#headerbar');
+			if(idspace > 0){
+				ul1.html("<ul id=\"navigation\">\n" +
+						"<li><a href=\"#\">问答</a></li>\n" +
+						"<li><a href=\"#\">练习</a></li>\n" +
+						"<li><a href=\"#\">考试</a></li>\n" +
+						"</ul>\n" +
+						"<ul id=\"log\">\n" +
+						"<li><a href=\"#\" id=\"special\" value='"+ idspace +"'>欢迎："+ namespace + " </a></li>\n" +
+						"<li><span></span></li>\n" +
+						"<li><a href=\"#\" id=\"quit\">退出</a></li>\n" +
+						"</ul>");
+				initUpdate();
+				theIdOfUser = idspace;
+				initLoadFlag = 55;
+			}
+
+
+		}
+		function returnMain(){
+			location.href = "/art/statichtml/index.html";
+		}  //you want ask question
+
+		function getUser(){
+			//first ,try get the username and id
+			// 取值时：把获取到的Json字符串转换回对象
+			var userJsonStr = sessionStorage.getItem('user');
+			userEntity = JSON.parse(userJsonStr);
+			idspace = userEntity.id;
+			namespace = userEntity.name;
+			console.log(namespace+"   id:"+idspace);
+		}
+
+		$(document).ready(function(){
+			getUser();
+			forwardHandle();  //check the request
+			if(initLoadFlag != 55){
+				returnIndex();
+			}
+			$("#return").click(function(){
+				returnMain();
+			})//init the return
+		});//initload
+		$(function(){
+			$("#menu a").each(function(index,ele){
+				$(ele).bind("mouseover",function(){
+					$("#menu a[class='menu-item']").removeClass();//已经有menu-item的移除
+					$(ele).toggleClass("menu-item");
+				});
+			});
+		});
+
+
+	</script>
+
+</html>

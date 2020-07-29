@@ -1,0 +1,33 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-size: 12px;
+	line-height: 22px;
+	color: #333;
+}
+
+.mbx {
+	color: #185697;
+	font-size: 12px;
+	margin: 8px;
+	font-weight: 100;
+	border-bottom: 1px #ddd dotted;
+	line-height: 30px;
+}
+
+a {
+	text-decoration: none;
+	color: #018BD3;
+}
+
+a:visited {
+	color: #018BD3;
+}
+
+a:hover {
+	color: #FF6600;
+	text-decoration: underline;
+}
